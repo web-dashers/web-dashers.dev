@@ -217,7 +217,26 @@ class GameScene extends Phaser.Scene {
     this._player.setShipVisible(false);
     this._player.setBallVisible(false);
     this._logo = this.add.image(0, 100, "GJ_WebSheet", "GJ_logo_001.png").setScrollFactor(0).setDepth(30);
-    this._robLogo = this.add.image(160, 555, "GJ_WebSheet", "RobTopLogoBig_001.png").setScrollFactor(0).setDepth(30).setScale(0.9);
+    this._robLogo = this.add.image(110, 595, "GJ_WebSheet", "RobTopLogoBig_001.png").setScrollFactor(0).setDepth(30).setScale(0.525).setInteractive();
+    this._makeBouncyButton(this._robLogo, 0.525, () => {
+      window.open("https://geometrydash.com", "_blank");
+    }, () => this._menuActive);
+    const _socialIconDefs = [
+      { frame: "gj_fbIcon_001.png",      url: "https://www.facebook.com/RobTopGames",  angle: 0,   row: 0, col: 0 },
+      { frame: "gj_twIcon_001.png",      url: "https://x.com/rohanis0000gd",       angle: -90, flipX: true, row: 0, col: 1 },
+      { frame: "gj_ytIcon_001.png",      url: "https://www.youtube.com/@rohanis0000gd",  angle: 0,   row: 0, col: 2 },
+      { frame: "gj_twitchIcon_001.png",  url: "https://www.twitch.tv/robtopgames",     angle: -90, flipX: true, row: 0, col: 3 },
+      { frame: "gj_discordIcon_001.png", url: "https://discord.gg/TfEzAVWPSJ",        angle: 90,  row: 1, col: 3 },
+    ];
+    const _socialScale = 0.75;
+    this._socialIcons = _socialIconDefs.map(def => {
+      const icon = this.add.image(0, 0, "GJ_GameSheet03", def.frame)
+        .setScrollFactor(0).setDepth(30).setScale(_socialScale).setAngle(def.angle).setFlipX(!!def.flipX).setInteractive();
+      this._makeBouncyButton(icon, _socialScale, () => {
+        window.open(def.url, "_blank");
+      }, () => this._menuActive);
+      return icon;
+    });
     this._copyrightText = this.add.text(0, 625, "© 2026 RobTop Games · geometrydash.com", {
       fontSize: "14px",
       color: "#ffffff",
@@ -4355,6 +4374,20 @@ _buildSettingsPopup() {
         ease: "Quad.InOut",
         yoyo: true,
         repeat: -1
+      });
+    }
+    if (this._robLogo) {
+      this._robLogo.x = 110;
+      this._robLogo.y = 585;
+    }
+    if (this._socialIcons && this._socialIcons.length > 0) {
+      const _iconSpacing = 52;
+      const _originX = 65;
+      const _originY = 530;
+      const _layout = [{row:0,col:0},{row:0,col:1},{row:0,col:2},{row:0,col:3},{row:1,col:3}];
+      this._socialIcons.forEach((icon, i) => {
+        icon.x = _originX + _layout[i].col * _iconSpacing;
+        icon.y = _originY + _layout[i].row * _iconSpacing;
       });
     }
   }
